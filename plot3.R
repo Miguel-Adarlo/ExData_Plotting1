@@ -11,12 +11,18 @@ names(power) <- c("Date", "Time", "Global_active_power", "Global_reactive_power"
 subpower <- subset(power, power$Date == "1/2/2007" | power$Date == "2/2/2007")
 
 #Fixing date and time
-datetime <- strptime(paste(subpower$Date, subpower$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
+subpower$DateTime <- strptime(paste(subpower$Date, subpower$Time, sep=" "), "%d/%m/%Y %H:%M:%S") 
 
 #Calling Plot and Lines
-plot(datetime, as.numeric(subpower$Sub_metering_1), type="l", ylab="Energy Submetering", xlab="")
-lines(datetime, as.numeric(subpower$Sub_metering_2), type="l", col="red")
-lines(datetime, as.numeric(subpower$Sub_metering_3), type="l", col="blue")
+plot(subpower$DateTime, subpower$Sub_metering_1, type = "n", xaxt = "n",
+                       xlab = "", ylab = "Energy sub metering")
+axis(side = 1, at = c(as.numeric(subpower$DateTime[1]),
+                      as.numeric(subpower$DateTime[1441]),
+                      as.numeric(subpower$DateTime[2880])),labels = c("Thu","Fri","Sat"))
+lines(subpower$DateTime, subpower$Sub_metering_1)
+lines(subpower$DateTime, subpower$Sub_metering_2, col = "red")
+lines(subpower$DateTime, subpower$Sub_metering_3, col = "blue")
+legend("topright", lty = 1, col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
 
 #Close the png file
 dev.off()
